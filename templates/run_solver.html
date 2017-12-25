@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>HBC Tech Week</title>
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"  type="text/css">
+
+</head>
+
+<body>
+
+  <title>Create Schedule</title>
+
+  <h2> Create Schedule</h2> 
+  <div>
+
+    <h3>Confirm Information</h3>
+    <h3>Cast List</h3>
+        {% for c in choreographer_list %}
+          <p>{{c.firstname}}'s piece: {{c.dancers}}</p>
+        {% endfor %}
+    <h3>Dancer Availabilities</h3>
+    {% for d in data_list %}
+        <p>{{d.firstname}} {{d.lastname}}: {{d.availability}} </p>
+    {% endfor %}
+</body>
+</html>

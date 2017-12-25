@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="refresh" content="30">  
+  <title>HBC Tech Week</title>
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"  type="text/css">
+</head>
+
+<body>
+  <!-- logo -->
+  <img  alt="Ballet" style="float: right;" height="200" width="200" 
+        src= "{{ url_for('static', filename='images/ballet.jpg') }}" 
+  />  
+
+  <!-- make all font bold -->
+  <strong/>
+
+  <!-- add many br -->
+
+
+  <h1>Automatic Tech Week Scheduler</h1>
+  <h3>Admin Page</h3>
+  <p>Note: you must add dancers first before seeing the pieces</p>
+
+  <p><a href="/add_dancers">Add/edit dancers</a></p>
+  <p><a href="/add_pieces">Add/edit pieces</a></p>
+  <p><a href="/manage_database">Manage Database</a></p>
+  <p><a href="/logout">Log out</a></p>
+</body>
+
+</html>

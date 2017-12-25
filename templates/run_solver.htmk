@@ -1,0 +1,47 @@
+<!doctype html>
+
+<html>
+
+  <title>Create Schedule</title>
+
+  <h2> Create Schedule</h2> 
+  <div>
+
+    <h3>Confirm Information</h3>
+    
+    <table class="db_table" border="1">
+      <td><fn>Email Address</fn></td>
+      <td><fn>First Name</fn></td>
+      <td><fn>Last Name</fn></td>
+      <td><fn> Nonharvard</fn></td>
+      <td><fn> Choreographer </fn></td>
+      {% for d in data_list %}
+        <tr>
+          <td><fn>{{d.username}} </fn></td>
+          <td><fn>{{d.firstname}} </fn></td>
+          <td><fn>{{d.lastname}} </fn></td>
+          <td><fn>{{d.nonharvard}} </fn></td>
+          <td><fn>{{d.choreographer}} </fn></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+    <br> <br>
+  <form action="/add_users", method="post">
+    <h2> Add a user </h2> 
+    <input type="text" name="email" value="" placeholder="Email">
+    <input type="text" name="firstname" value="" placeholder="First Name">
+    <input type="text" name="lastname" value="" placeholder="Last Name"> <br>
+    <input type="checkbox" name="nonharvard" value="" > Is a nonharvard Student <br>
+    <input type="checkbox" name="choreographer" value="" > Is a choreographer <br>
+    <input class="bn" type="submit" name="update" value="Update">
+  </form>
+
+  <form action="/delete_user", method="post">
+    <h2> Delete a user </h2> 
+    <input type="text" name="username" value="" placeholder="Email">
+    <input class="bn" type="submit" value="Delete">
+  </form>
+
+
+</html>

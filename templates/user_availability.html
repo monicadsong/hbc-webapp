@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html>
+  <style>
+    h2 { 
+      font-family: "Times New Roman", Times, serif; 
+    }
+
+    fn {
+      font-family: "Comic Sans MS", cursive, sans-serif; 
+      font-style: italic;
+      margin: 0.1em 0;
+    }
+
+    .bn {
+      width: 6em;
+      font-weight: bold;
+      -webkit-appearance: button;
+    }
+  </style>
+
+  <title>Database Manager</title>
+
+  <form action="/manage_database", method="post">
+
+    <h2> Available Users </h2> 
+    <div>
+      <table class="db_table" border="1">
+        <td><fn> User Name </fn></td>
+        <td><fn> String Data </fn></td>
+        <td><fn> Integer Data </fn></td>
+        {% for d in data_list %}
+          <tr>
+            <td><fn>{{d.name}} </fn></td>
+            <td><fn>{{d.data_str}} </fn></td>
+            <td><fn>{{d.data_int}} </fn></td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    
+    <br> <br>
+
+    <h2> {{user_name}}: please update your data </h2> 
+    <input type="text" name="data_str" value="enter your str" placeholder="new_str">
+    <input type="text" name="data_int" value="enter your integer" placeholder="new_int">
+    <input class="bn" type="submit" name="update" value="Update">
+
+  </form>
+</html>
