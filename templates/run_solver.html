@@ -23,5 +23,10 @@
     {% for d in data_list %}
         <p>{{d.firstname}} {{d.lastname}}: {{d.availability}} </p>
     {% endfor %}
+
+  </div>
+  <form action="/confirm", method="post">
+  <input class="bn" type="submit" value="Confirm Information">
+  </form>
 </body>
 </html>

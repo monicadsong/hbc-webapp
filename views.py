@@ -172,6 +172,7 @@ def add_availability():
   avail = um.get_availability(user_id)
   return fk.render_template('availability.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
+
 @app.route("/create_schedule", methods=['GET'])
 #@login_required
 def create_schedule():
@@ -179,6 +180,23 @@ def create_schedule():
   choreographer_list = um.get_choreographers(db_list)
   return fk.render_template('run_solver.html', choreographer_list = choreographer_list, data_list = db_list)
 
+
+
+@app.route("/confirm", methods=['POST'])
+#@login_required
+def confirm():
+  time_data = um.get_time()
+  days = um.create_dates(time_data)
+  hours = um.get_hours(time_data)
+  return fk.render_template('stage_time.html', days = days, hours = hours)
+
+
+
+@app.route("/stage_times", methods=['POST'])
+#@login_required
+def stage_times():
+
+  return None
 
 
 
