@@ -6,6 +6,7 @@ from functools import wraps
 from g import app
 
 import user_manager as um
+from solver import solve
 
 def login_required(f):
   """ 
@@ -172,6 +173,22 @@ def add_availability():
   avail = um.get_availability(user_id)
   return fk.render_template('availability.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
+@app.route("/stage_times", methods=['POST'])
+#@login_required
+def set_domain():
+  if fk.request.method == 'POST':
+    #print ('post')
+    domain = ''
+    for item in fk.request.form:
+      domain = domain + item + ';'
+    um.change_domain(domain)
+
+def get_schedule():
+  ####RUN SOLVER
+  pieces, violation = solve()
+  return fk.render_template('tech_schedule.html')
+
+
 
 @app.route("/create_schedule", methods=['GET'])
 #@login_required
@@ -190,13 +207,6 @@ def confirm():
   hours = um.get_hours(time_data)
   return fk.render_template('stage_time.html', days = days, hours = hours)
 
-
-
-@app.route("/stage_times", methods=['POST'])
-#@login_required
-def stage_times():
-
-  return None
 
 
 

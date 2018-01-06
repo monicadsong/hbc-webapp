@@ -29,6 +29,10 @@ class _Times(_Base):
   start_time = Column(Integer)
   end_time = Column(Integer)
 
+class _Domain(_Base):
+  __tablename__ = 'domain'
+  id = Column(Integer, primary_key=True)
+  domain = Column(String)
 
 _engine = create_engine('sqlite:///users.db', echo=False)
 _session = sessionmaker()
@@ -81,6 +85,27 @@ def create_dates(time_data):
 
 def get_hours(time_data):
   return list(range(time_data.start_time, time_data.end_time + 1))
+
+def change_domain(time_string):
+  s = _session()
+  DOMAIN = s.query(_Domain).first()
+  print ('first')
+  if DOMAIN: 
+    DOMAIN.domain = time_string
+  else: 
+    DOMAIN = _Domain(domain = time_string)
+  s.add(DOMAIN)
+  s.commit()
+  return True
+
+def get_domain():
+  s = _session()
+  DOMAIN = s.query(_Domain).first()
+
+  if DOMAIN: 
+    return DOMAIN.domain
+  else: 
+    return None
 
 def add_user(user_data={}):
   """
@@ -191,14 +216,14 @@ def login(username, password):
       print("Wrong password")
       return False 
 
-def is_valid_user(username):
+def search_user(username):
   s = _session()
   try: 
     user = s.query(_Dancer).filter_by(username=username).one()
   except:
     return False 
   else:
-    return True
+    return user
 
 def get_user_data_list():
   class Dummy:
