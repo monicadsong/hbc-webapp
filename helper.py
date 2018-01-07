@@ -2,15 +2,17 @@
 #HELPER FUNCTIONS FOR SCHEDULER
 
 def eval(function, *args):
-		return (function(*args))
+	return (function(*args))
 
 def crossOff(rehearsal_times, dancer_times):
 	#Removes unavailable dancer times from rehearsal times
 	#dancer times is a list of dancer's available times
 	#rehearsal times is the list of the choreographer's available times
+	print ('crossing off')
 	new_rehearsal_times = rehearsal_times[:]
 	for r in rehearsal_times:
 		if r not in dancer_times:
+			print ('removed time')
 			new_rehearsal_times.remove(r)
 	return new_rehearsal_times
 

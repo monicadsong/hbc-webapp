@@ -3,9 +3,11 @@ from sqlalchemy import create_engine
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import example_users
 
 import sys, os
 import datetime
+
 
 _Base = declarative_base()
 class _Dancer(_Base):
@@ -103,7 +105,7 @@ def get_domain():
   DOMAIN = s.query(_Domain).first()
 
   if DOMAIN: 
-    return DOMAIN.domain
+    return DOMAIN.domain[:-1]
   else: 
     return None
 
@@ -191,7 +193,11 @@ def user_update(username, availability):
 def _print_user_info(u):
   #print("username: ", u.username)
   print("firstname: ", u.firstname)
-  print ("dancers:", u.dancers)
+  print("lastname: ", u.lastname)
+  print("username: ", u.username)
+  print("password: ", u.password)
+  print("nonharvard: ", u.nonharvard)
+  print ("choreographer:", u.choreographer)
   print ("availability:", u.availability)
   print("--------------------------------------------")
 
@@ -215,6 +221,15 @@ def login(username, password):
     else:
       print("Wrong password")
       return False 
+
+def is_valid_user(username):
+  s = _session()
+  try: 
+    user = s.query(_Dancer).filter_by(username=username).one()
+  except:
+    return False 
+  else:
+    return True
 
 def search_user(username):
   s = _session()
@@ -264,6 +279,27 @@ if __name__ == '__main__':
     print("added users")
     show_users()
 
+  def test_add_example():
+    user_data = []
+    for dancer in example_users.users:
+      print ('dancer',dancer)
+      user_dict = {}
+      user_dict['firstname'] = dancer[0]
+      user_dict['lastname'] = dancer[1]
+      user_dict['email'] = dancer[2]
+      user_dict['password'] = dancer[3]
+      user_dict['nonharvard'] = dancer[4]
+      user_dict['choreographer'] = dancer[5]
+      user_dict['availability'] = dancer[6]
+      user_data.append(user_dict)
+
+    for item in user_data:
+      print ('item', item)
+      add_user(item)
+  def test_update_example():
+    for item in example_users.update:
+      user_update(item[0], item[1])
+
 
   def test_add_pieces():
     pieces = {'anna@college': 'angela@college, mara@college, deedee@college, isabel@college, sarah@wellesley', 
@@ -293,12 +329,16 @@ if __name__ == '__main__':
     add_user(admin)
     show_users()
 
-  #
+  def test_domain():
+    print (get_domain())
+  #test_update_example()
+  test_domain()
+  #test_add_example()
   #add_admin()
   #test_update_users()
   #clear_table()
   #test_add_users()
   #user_update('anna@college', '2017-10-16,4;2017-10-16,5;2017-10-16,6;2017-10-16,7;2017-10-16,8;2017-10-16,9;2017-10-16,10;2017-10-16,11;2017-10-17,11;2017-10-18,11;2017-10-19,11;2017-10-20,11;')
-  show_users()
+  #show_users()
   #test_add_pieces()
   #get_availability('anna@college')

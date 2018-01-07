@@ -21,7 +21,14 @@
 
   <h1>Automatic Tech Week Scheduler</h1>
   <h3>This is the tech schedule</h3>
-
+  <h4>Violations</h4>
+  {% for v in violations: %}
+    <p>v</p>
+  {% endfor %}
+  <h4>Schedule</h4>
+  {% for p in pieces: %}
+  <p>The assigned time for {{p.choreographer.name}}'s piece is {{p.slot}}</p>
+  {% endfor %}
 </body>
 
 

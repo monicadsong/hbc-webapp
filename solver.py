@@ -12,6 +12,8 @@ def get_dancers():
 def get_pieces(dancers, domain):
     choreographers = [(Dancer(d.firstname+d.lastname, d.availability.split(';'), d.nonharvard, d.choreographer), 
         d.dancers) for d in um.get_user_data_list() if d.choreographer]
+    domain = domain.split(';')
+    print ('domain', domain)
     pieces = []
     for c in choreographers:
         performers = []
@@ -21,8 +23,9 @@ def get_pieces(dancers, domain):
     return pieces
 
 
-def solve(domain):
+def solve():
     dancers = get_dancers()
+    domain = um.get_domain()
     pieces = get_pieces(dancers, domain)
     problem = Scheduler(dancers, pieces, domain)
     problem.set_initial(pieces, dancers)
@@ -69,21 +72,20 @@ def solve(domain):
 
 
 if __name__ == '__main__':  
-    domain = "2017-12-06,4;2017-12-06,5;2017-12-06,6;2017-12-06,7;2017-12-06,8;2017-12-06,9;2017-12-06,10"
     def test_get_dancers():
         for item in get_dancers():
             print (item.name)
 
     def test_get_pieces():
+        domain = um.get_domain()
         dancers = um.get_user_data_list()
         pieces = get_pieces(dancers, domain)
-        print ('lengthh of pieces', len(pieces))
         for item in pieces:
             print (item.choreographer)
             print (item.performers)
 
     def test_solve():
-        solve(domain)
+        solve()
 
     #test_get_dancers()
     #test_get_pieces()

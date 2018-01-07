@@ -173,30 +173,25 @@ def add_availability():
   avail = um.get_availability(user_id)
   return fk.render_template('availability.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
-@app.route("/stage_times", methods=['POST'])
+@app.route("/stage_time", methods=['GET', 'POST'])
 #@login_required
 def set_domain():
-  if fk.request.method == 'POST':
-    #print ('post')
+  if fk.request.method == 'GET':
+    print ('GET')
+    time_data = um.get_time()
+    days = um.create_dates(time_data)
+    hours = um.get_hours(time_data)
+    return fk.render_template('stage_time.html', days = days, hours = hours)
+  else:
+    print ('POST')
     domain = ''
     for item in fk.request.form:
       domain = domain + item + ';'
+    print (domain, 'domain')
     um.change_domain(domain)
-
-def get_schedule():
-  ####RUN SOLVER
-  pieces, violation = solve()
-  return fk.render_template('tech_schedule.html')
-
-
-
-@app.route("/create_schedule", methods=['GET'])
-#@login_required
-def create_schedule():
-  db_list = um.get_user_data_list()
-  choreographer_list = um.get_choreographers(db_list)
-  return fk.render_template('run_solver.html', choreographer_list = choreographer_list, data_list = db_list)
-
+    db_list = um.get_user_data_list()
+    choreographer_list = um.get_choreographers(db_list)
+    return fk.render_template('confirm_info.html', choreographer_list = choreographer_list, data_list = db_list, domain = domain)
 
 
 @app.route("/confirm", methods=['POST'])
@@ -205,7 +200,9 @@ def confirm():
   time_data = um.get_time()
   days = um.create_dates(time_data)
   hours = um.get_hours(time_data)
-  return fk.render_template('stage_time.html', days = days, hours = hours)
+  domain = um.get_domain()
+  pieces, violations = solve()
+  return fk.render_template('tech_schedule.html', violations = violations, pieces = pieces)
 
 
 
