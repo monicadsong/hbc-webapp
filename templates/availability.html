@@ -1,9 +1,13 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>HBC Tech Week</title>
-  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"  type="text/css">
+ <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -17,8 +21,24 @@
 
   <!-- add many br -->
 
+
+
+
+
   <a href="/index"><h1>Automatic Tech Week Scheduler</h1></a>
   <h3>{{ username }} Input Availability</h3>
+
+
+  <div class="card">
+    <h3 class="card-header primary-color white-text">Featured</h3>
+    <div class="card-body">
+        <h4 class="card-title">Special title treatment</h4>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+
+
   <form action="/add_availability", method="post">
   <table class="db_table" border="1">
     <tr>
