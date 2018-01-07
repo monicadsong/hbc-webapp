@@ -44,6 +44,16 @@ def logout():
   name = fk.request.cookies.get('user_id')
   return fk.redirect("/login")
 
+@app.route('/admin')
+@login_required
+def admin():
+  user_id = fk.request.cookies.get('user_id')
+  if user_id != 'ADMIN': 
+    return "Sorry, you don't have access this page.", 403
+  else:
+    return fk.render_template('admin.html')
+
+
 """
 Browser index
 """
@@ -82,7 +92,7 @@ def manage_database():
 
 
 @app.route("/add_users", methods=['GET', 'POST'])
-#@login_required
+@login_required
 def add_users():
   user_id = fk.request.cookies.get('user_id')
   if fk.request.method == 'POST':
