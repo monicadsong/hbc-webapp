@@ -70,7 +70,7 @@ def index():
     um.user_update(user_id, availability)
   time_data = um.get_time()
   days = um.create_dates(time_data)
-  hours = um.get_hours(time_data)
+  hours = [12,1,2,3,4,5,6,7,8,9,10,11]
   avail = um.get_availability(user_id)
   return fk.render_template('index.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
@@ -177,7 +177,7 @@ def define_times():
 
   return fk.render_template('times.html', current_time = um.get_time())
 
-@app.route("/add_availability", methods=['GET', 'POST'])
+@app.route("/add_availability", methods=['POST'])
 #@login_required
 def add_availability():
   user_id = fk.request.cookies.get('user_id')
@@ -191,11 +191,22 @@ def add_availability():
   days = um.create_dates(time_data)
   hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   avail = um.get_availability(user_id)
-  return fk.render_template('availability.html', days = days, hours = hours, avail = avail, user_name = user_id)
+  return fk.render_template('index.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
 @app.route("/stage_time", methods=['GET', 'POST'])
 #@login_required
+
 def set_domain():
+  def parse_domain(domain):
+    dates = {}
+    for d in domain.split(';'):
+      [date, time] = d.split(',')
+      if date in dates:
+        dates[date] = dates[date] + ', ' + time + 'pm'
+      else:
+        dates[date] = time + 'pm'
+    return dates
+
   if fk.request.method == 'GET':
     print ('GET')
     time_data = um.get_time()
@@ -203,24 +214,19 @@ def set_domain():
     hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     return fk.render_template('stage_time.html', days = days, hours = hours)
   else:
-    print ('POST')
     domain = ''
     for item in fk.request.form:
       domain = domain + item + ';'
     print (domain, 'domain')
     um.change_domain(domain)
-    db_list = um.get_user_data_list()
-    choreographer_list = um.get_choreographers(db_list)
-    return fk.render_template('confirm_info.html', choreographer_list = choreographer_list, data_list = db_list, domain = domain[:-1])
+    user_avails = [(x.firstname, x.lastname, um.get_availability(x.username)) for x in um.get_user_data_list()]
+    return fk.render_template('confirm_info.html', cast_list = um.get_castlist(), 
+      data_list = user_avails, domain = parse_domain(um.get_domain()))
 
 
 @app.route("/confirm", methods=['POST'])
 #@login_required
 def confirm():
-  time_data = um.get_time()
-  days = um.create_dates(time_data)
-  hours = um.get_hours(time_data)
-  domain = um.get_domain()
   pieces, violations = solve()
   return fk.render_template('tech_schedule.html', violations = violations, pieces = pieces)
 

@@ -5,24 +5,38 @@
   <h3>Confirm Information</h3>
   <hr>
   <h4>Cast List</h4>
-    {% for c in choreographer_list %}
-      <p>{{c.firstname}}'s piece: 
-        {% for d in c.dancers: %}
-        {{ d.firstname }}
+    {% for c in cast_list %}
+      <p>{{c[0]}}'s piece: 
+        {{cast_list[c][0].firstname}}
+        {% for d in cast_list[c][1:]: %}
+        , {{d.firstname}}
         {% endfor %}
       </p>
     {% endfor %}
   <hr>
   <h4>Dancer Availabilities</h4>
-  {% for d in data_list %}
-      <p>{{d.firstname}} {{d.lastname}}: {{d.availability}} </p>
-  {% endfor %}
-  <h3>Times that Stage is Open</h3>
-  <p>{{domain}}</p>
 
+  <table class="table table-borderless table-sm ">
+    {% for d in data_list %}
+      <tr>
+        <th><fn>{{d[0]}} {{d[1]}}</fn></th>
+        <td><fn>
+          {% for time in d[2]: %}
+          <p>{{time}}: {{d[2][time]}}</p>
+          {% endfor %}
+        </fn></td>
+      </tr>
+    {% endfor %}
+  </table>
+  <hr>
+
+  <h4>Times that Stage is Open</h4>
+  {% for d in domain: %}
+  <p>{{d}}: {{domain[d]}}</p>
+  {% endfor %}
   </div>
   <form action="/confirm", method="post">
-  <input class="bn" type="submit" value="Confirm Information">
+  <input class="bn" type="submit" value="Get Schedule">
   </form>
 
 {% endblock %}

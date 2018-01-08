@@ -16,9 +16,13 @@ def get_pieces(dancers, domain):
     print ('domain', domain)
     pieces = []
     for c in choreographers:
+        '''
         performers = []
         for p in c[1].split(', '):
             performers.append(um.search_user(p))
+
+        WRITE IN UM
+        '''
         pieces.append(Rehearsal(c[0], performers, domain))
     return pieces
 

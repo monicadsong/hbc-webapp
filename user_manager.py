@@ -84,18 +84,15 @@ def create_dates(time_data):
       wd = d.weekday()
       days.append((day_week[wd], d))
   return days
-'''
-def get_hours(time_data):
-  return list(range(time_data.start_time, time_data.end_time + 1))
-'''
+
 def change_domain(time_string):
   s = _session()
   DOMAIN = s.query(_Domain).first()
   print ('first')
   if DOMAIN: 
-    DOMAIN.domain = time_string
+    DOMAIN.domain = time_string[:-1]
   else: 
-    DOMAIN = _Domain(domain = time_string)
+    DOMAIN = _Domain(domain = time_string[:-1])
   s.add(DOMAIN)
   s.commit()
   return True
@@ -105,7 +102,7 @@ def get_domain():
   DOMAIN = s.query(_Domain).first()
 
   if DOMAIN: 
-    return DOMAIN.domain[:-1]
+    return DOMAIN.domain
   else: 
     return None
 
@@ -140,18 +137,16 @@ def get_availability(username):
   else:
     if it.availability:
       a_split = it.availability.split(';')
-      print (a_split)
       avail = {}
       for a in a_split:
         [date, time] = a.split(',')
         if date in avail:
-          avail[date].append(time)
+          avail[date] = avail[date] + ', ' + time + 'pm'
         else:
-          avail[date] = [time]
+          avail[date] = time + 'pm'
       return avail
     else:
       return ''
-
 
 def del_user(username): 
   s = _session()
@@ -175,6 +170,8 @@ def add_pieces(pieces):
     choreographer.dancers = pieces[p]
   s.commit()
   return True
+
+
 
 #make sure usernames are all lowercase
 def user_update(username, availability):
@@ -263,6 +260,19 @@ def get_user_data_list():
 
 def get_choreographers(db_list):
   return [x for x in db_list if x.choreographer]
+
+
+def get_castlist():
+  choreographers = get_choreographers(get_user_data_list())
+  castlist = {}
+  for x in choreographers:
+    performers = []
+    for p in x.dancers.split(', '):
+        performers.append(search_user(p))
+    castlist[(x.firstname, x.lastname)] = performers
+  return castlist
+
+
 if __name__ == '__main__':  
   def test_add_users():
     '''
@@ -330,8 +340,16 @@ if __name__ == '__main__':
     add_user(admin)
     show_users()
 
+  def test_avail():
+    user_avails = [(x.firstname, x.lastname, get_availability(x.username)) for x in get_user_data_list()]
+    print (user_avails)
+
   def test_domain():
     print (get_domain())
+  def test_castlist():
+    print (get_castlist())
+
+  #test_avail()
   #test_update_example()
   #test_domain()
   #test_add_example()
@@ -343,4 +361,5 @@ if __name__ == '__main__':
   #show_users()
   #test_add_pieces()
   #get_availability('anna@college')
-  test_del_users()
+  #test_del_users()
+  test_castlist()
