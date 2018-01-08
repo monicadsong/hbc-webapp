@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>HBC Tech Week</title>
+ <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <!-- logo -->
+  <img  alt="Ballet" style="float: right;" height="200" width="200" 
+        src= "{{ url_for('static', filename='images/ballet.jpg') }}" 
+  />  
+
+  <!-- make all font bold -->
+  <strong/>
+
+  <!-- add many br -->
+
+
+
+
+
+  <a href="/index"><h1>Automatic Tech Week Scheduler</h1></a>
+  <h3>{{ username }} Input Availability</h3>
+
+
+  <div class="card">
+    <h3 class="card-header primary-color white-text">Featured</h3>
+    <div class="card-body">
+        <h4 class="card-title">Special title treatment</h4>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+
+
+  <form action="/add_availability", method="post">
+  <table class="db_table" border="1">
+    <tr>
+      <td>&nbsp;</td>
+      {% for h in hours %}
+      <td>{{h}}pm</td>
+      {% endfor %}
+    </tr>
+    {% for d in days %}
+      <tr>
+        <td>{{d[0]}}, {{d[1]}}</td>
+        {% for h in hours %}
+        <td>
+          <input type="checkbox" name = '{{d[1]}},{{h}}' value="checked"><br>
+        </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+  <input class="bn" type="submit" value="Submit Availability">
+</form>
+
+<h3>Your Availability</h3>
+{% for a in avail %}
+  <p>{{a}}: {{avail[a]}}</p>
+{% endfor %}
+
+</body>
+
+</html>
