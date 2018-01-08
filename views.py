@@ -61,7 +61,18 @@ Browser index
 @app.route('/index')
 @login_required
 def index():
-  return fk.render_template("index.html") 
+  user_id = fk.request.cookies.get('user_id')
+  if fk.request.method == 'POST':
+    #print ('post')
+    availability = ''
+    for item in fk.request.form:
+      availability = availability + item + ';'
+    um.user_update(user_id, availability)
+  time_data = um.get_time()
+  days = um.create_dates(time_data)
+  hours = um.get_hours(time_data)
+  avail = um.get_availability(user_id)
+  return fk.render_template('index.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
 """
 Database management
@@ -170,7 +181,6 @@ def define_times():
 #@login_required
 def add_availability():
   user_id = fk.request.cookies.get('user_id')
-  print (user_id, 'user_id')
   if fk.request.method == 'POST':
     #print ('post')
     availability = ''
