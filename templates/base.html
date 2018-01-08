@@ -21,9 +21,11 @@
         <img src="../static/images/ballet.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
         Automatic Tech Week Scheduler
       </a>
-      <span class="navbar-text">
-          {{ user_name }}
-      </span>
+      <div class = "nav navbar-nav navbar-right">
+        <p class="navbar-text">{{user_name}}
+        <a href="/logout" class="btn btn-default navbar-btn"" role="button">Logout</a>
+        </p>
+      </div>
     </nav>
 
     <div class="container">
@@ -37,7 +39,7 @@
     <footer class="footer">
       <div class="container">
         <span class="text-muted">
-          <a href="/logout">Log out</a> | <a href="/admin">Admin</a> | User Guide </p>
+          <a href="/userguide">User Guide</a>
         </span>
       </div>
     </footer>

@@ -62,17 +62,21 @@ Browser index
 @login_required
 def index():
   user_id = fk.request.cookies.get('user_id')
-  if fk.request.method == 'POST':
-    #print ('post')
-    availability = ''
-    for item in fk.request.form:
-      availability = availability + item + ';'
-    um.user_update(user_id, availability)
-  time_data = um.get_time()
-  days = um.create_dates(time_data)
-  hours = [12,1,2,3,4,5,6,7,8,9,10,11]
-  avail = um.get_availability(user_id)
-  return fk.render_template('index.html', days = days, hours = hours, avail = avail, user_name = user_id)
+  if user_id == "harvardballetcompany@gmail.com":
+    return fk.render_template('admin.html', user_name = user_id)
+  else:
+    if fk.request.method == 'POST':
+      #print ('post')
+      availability = ''
+      for item in fk.request.form:
+        availability = availability + item + ';'
+      um.user_update(user_id, availability)
+    time_data = um.get_time()
+    days = um.create_dates(time_data)
+    hours = [12,1,2,3,4,5,6,7,8,9,10,11]
+    avail = um.get_availability(user_id)
+    return fk.render_template('index.html', days = days, hours = hours, avail = avail, user_name = user_id)
+
 
 """
 Database management
@@ -241,6 +245,11 @@ def confirm():
   return fk.render_template('tech_schedule.html', violations = violations, pieces = pieces,
     user_name = user_id)
 
+@app.route("/userguide", methods=['GET'])
+#@login_required
+def userguide():
+  user_id = fk.request.cookies.get('user_id')
+  return fk.render_template('userguide.html', user_name = user_id)
 
 
 
