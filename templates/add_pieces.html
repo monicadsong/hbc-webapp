@@ -25,8 +25,13 @@
 </form>
 <hr>
 <h3>Cast List</h3>
-{% for c in choreographer_list %}
-  <p><b>{{c.firstname}}'s piece</b>: {{c.dancers}}</p>
+{% for c in cast_list %}
+  <p>{{c[0]}}'s piece: 
+    {{cast_list[c][0].firstname}}
+    {% for d in cast_list[c][1:]: %}
+    , {{d.firstname}}
+    {% endfor %}
+  </p>
 {% endfor %}
 
 {% endblock %}

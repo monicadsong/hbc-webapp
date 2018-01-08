@@ -51,7 +51,7 @@ def admin():
   if user_id != 'harvardballetcompany@gmail.com': 
     return "Sorry, you don't have access this page.", 403
   else:
-    return fk.render_template('admin.html')
+    return fk.render_template('admin.html', user_name = user_id)
 
 
 """
@@ -125,25 +125,27 @@ def add_users():
 
       um.add_user(user_data)
       db_list = um.get_user_data_list()
-      return fk.render_template('add_user.html', data_list = db_list)
+      return fk.render_template('add_user.html', data_list = db_list, user_name=user_id)
   elif fk.request.method == 'GET':
     print ('fk get')
     db_list = um.get_user_data_list()
-    return fk.render_template('add_user.html', data_list = db_list)
+    return fk.render_template('add_user.html', data_list = db_list, user_name=user_id)
 
 
 
 @app.route("/delete_user", methods=['POST'])
 #@login_required
 def delete_user():
+  user_id = fk.request.cookies.get('user_id')
   user = fk.request.form['username']
   um.del_user(user)
   db_list = um.get_user_data_list()
-  return fk.render_template('add_user.html', data_list = db_list)
+  return fk.render_template('add_user.html', data_list = db_list, user_name=user_id)
 
 @app.route("/add_pieces", methods=['GET', 'POST'])
 #@login_required
 def add_pieces():
+  user_id = fk.request.cookies.get('user_id')
   if fk.request.method == 'POST':
     #print ('post')
     pieces = {}
@@ -159,13 +161,14 @@ def add_pieces():
     print ('pieces', pieces)
     um.add_pieces(pieces)
   db_list = um.get_user_data_list()
-  choreographer_list = um.get_choreographers(db_list)
-  return fk.render_template('add_pieces.html', choreographer_list = choreographer_list, dancer_list = db_list)
+  return fk.render_template('add_pieces.html', cast_list = um.get_castlist(), 
+    choreographer_list = um.get_choreographers(db_list), dancer_list = db_list, user_name=user_id)
 
 
 @app.route("/define_times", methods=['GET', 'POST'])
 #@login_required
 def define_times():
+  user_id = fk.request.cookies.get('user_id')
   if fk.request.method == 'POST':
     time_data = {}
     time_data['start_date'] = fk.request.form['start_date']
@@ -175,7 +178,7 @@ def define_times():
     print (time_data, 'time data views')
     um.change_time(time_data)
 
-  return fk.render_template('times.html', current_time = um.get_time())
+  return fk.render_template('times.html', current_time = um.get_time(), user_name=user_id)
 
 @app.route("/add_availability", methods=['POST'])
 #@login_required
@@ -197,6 +200,7 @@ def add_availability():
 #@login_required
 
 def set_domain():
+  user_id = fk.request.cookies.get('user_id')
   def parse_domain(domain):
     dates = {}
     for d in domain.split(';'):
@@ -221,14 +225,21 @@ def set_domain():
     um.change_domain(domain)
     user_avails = [(x.firstname, x.lastname, um.get_availability(x.username)) for x in um.get_user_data_list()]
     return fk.render_template('confirm_info.html', cast_list = um.get_castlist(), 
-      data_list = user_avails, domain = parse_domain(um.get_domain()))
+      data_list = user_avails, domain = parse_domain(um.get_domain()), user_name = user_id)
 
 
 @app.route("/confirm", methods=['POST'])
 #@login_required
 def confirm():
+  user_id = fk.request.cookies.get('user_id')
+  def parse_slot(slot):
+    [date, time] = slot.split(',')
+    return date, time
   pieces, violations = solve()
-  return fk.render_template('tech_schedule.html', violations = violations, pieces = pieces)
+  for p in pieces:
+    p.slot = parse_slot(p.slot)
+  return fk.render_template('tech_schedule.html', violations = violations, pieces = pieces,
+    user_name = user_id)
 
 
 

@@ -13,19 +13,13 @@ def get_pieces(dancers, domain):
     choreographers = [(Dancer(d.firstname+d.lastname, d.availability.split(';'), d.nonharvard, d.choreographer), 
         d.dancers) for d in um.get_user_data_list() if d.choreographer]
     domain = domain.split(';')
-    print ('domain', domain)
     pieces = []
     for c in choreographers:
-        '''
         performers = []
         for p in c[1].split(', '):
             performers.append(um.search_user(p))
-
-        WRITE IN UM
-        '''
         pieces.append(Rehearsal(c[0], performers, domain))
     return pieces
-
 
 def solve():
     dancers = get_dancers()
@@ -93,7 +87,7 @@ if __name__ == '__main__':
 
     #test_get_dancers()
     #test_get_pieces()
-    test_solve()
+    #test_solve()
 
 
 

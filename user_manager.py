@@ -42,7 +42,6 @@ _session.configure(bind=_engine)
 _Base.metadata.create_all(_engine)
 
 def change_time(time_data):
-  print (time_data, 'time_data in um')
   s = _session()
   TIME = s.query(_Times).first()
   if TIME: 
@@ -88,7 +87,6 @@ def create_dates(time_data):
 def change_domain(time_string):
   s = _session()
   DOMAIN = s.query(_Domain).first()
-  print ('first')
   if DOMAIN: 
     DOMAIN.domain = time_string[:-1]
   else: 
@@ -100,16 +98,12 @@ def change_domain(time_string):
 def get_domain():
   s = _session()
   DOMAIN = s.query(_Domain).first()
-
   if DOMAIN: 
     return DOMAIN.domain
   else: 
     return None
 
 def add_user(user_data={}):
-  """
-  user_data: dictionary
-  """
   s = _session()
   try: 
     s.query(_Dancer).filter_by(username=user_data['email']).one()
@@ -119,7 +113,6 @@ def add_user(user_data={}):
      choreographer=user_data['choreographer'], availability = None , dancers = None)
     s.add(user)
     s.commit()
-
     return True
   else:
     print("User: {} is in database".format(user_data['email']))
@@ -261,7 +254,6 @@ def get_user_data_list():
 def get_choreographers(db_list):
   return [x for x in db_list if x.choreographer]
 
-
 def get_castlist():
   choreographers = get_choreographers(get_user_data_list())
   castlist = {}
@@ -271,7 +263,6 @@ def get_castlist():
         performers.append(search_user(p))
     castlist[(x.firstname, x.lastname)] = performers
   return castlist
-
 
 if __name__ == '__main__':  
   def test_add_users():

@@ -14,8 +14,14 @@
       </p>
     {% endfor %}
   <hr>
-  <h4>Dancer Availabilities</h4>
 
+  <h4>Times that Stage is Open</h4>
+  {% for d in domain: %}
+  <p>{{d}}: {{domain[d]}}</p>
+  {% endfor %}
+  <hr>
+
+  <h4>Dancer Availabilities</h4>
   <table class="table table-borderless table-sm ">
     {% for d in data_list %}
       <tr>
@@ -28,15 +34,10 @@
       </tr>
     {% endfor %}
   </table>
-  <hr>
 
-  <h4>Times that Stage is Open</h4>
-  {% for d in domain: %}
-  <p>{{d}}: {{domain[d]}}</p>
-  {% endfor %}
   </div>
   <form action="/confirm", method="post">
-  <input class="bn" type="submit" value="Get Schedule">
+  <input class="btn btn-primary" type="submit" value="Get Schedule">
   </form>
 
 {% endblock %}
