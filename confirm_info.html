@@ -7,7 +7,7 @@
   <h4>Cast List</h4>
     {% for c in choreographer_list %}
       <p>{{c.firstname}}'s piece: 
-        {% for d in c.dancers: %}
+        {% for d in c.dancers %}:
         {{ d.firstname }}
         {% endfor %}
       </p>

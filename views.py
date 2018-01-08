@@ -48,7 +48,7 @@ def logout():
 @login_required
 def admin():
   user_id = fk.request.cookies.get('user_id')
-  if user_id != 'ADMIN': 
+  if user_id != 'harvardballetcompany@gmail.com': 
     return "Sorry, you don't have access this page.", 403
   else:
     return fk.render_template('admin.html')
@@ -125,11 +125,11 @@ def add_users():
 
       um.add_user(user_data)
       db_list = um.get_user_data_list()
-      return fk.render_template('add_user_v2.html', data_list = db_list)
+      return fk.render_template('add_user.html', data_list = db_list)
   elif fk.request.method == 'GET':
     print ('fk get')
     db_list = um.get_user_data_list()
-    return fk.render_template('add_user_v2.html', data_list = db_list)
+    return fk.render_template('add_user.html', data_list = db_list)
 
 
 
@@ -139,7 +139,7 @@ def delete_user():
   user = fk.request.form['username']
   um.del_user(user)
   db_list = um.get_user_data_list()
-  return fk.render_template('add_user_v2.html', data_list = db_list)
+  return fk.render_template('add_user.html', data_list = db_list)
 
 @app.route("/add_pieces", methods=['GET', 'POST'])
 #@login_required
@@ -170,8 +170,8 @@ def define_times():
     time_data = {}
     time_data['start_date'] = fk.request.form['start_date']
     time_data['end_date'] = fk.request.form['end_date']
-    time_data['start_time'] = fk.request.form['start_time']
-    time_data['end_time'] = fk.request.form['end_time']
+    time_data['start_time'] = 12
+    time_data['end_time'] = 11
     print (time_data, 'time data views')
     um.change_time(time_data)
 
@@ -189,7 +189,7 @@ def add_availability():
     um.user_update(user_id, availability)
   time_data = um.get_time()
   days = um.create_dates(time_data)
-  hours = um.get_hours(time_data)
+  hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   avail = um.get_availability(user_id)
   return fk.render_template('availability.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
@@ -200,7 +200,7 @@ def set_domain():
     print ('GET')
     time_data = um.get_time()
     days = um.create_dates(time_data)
-    hours = um.get_hours(time_data)
+    hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     return fk.render_template('stage_time.html', days = days, hours = hours)
   else:
     print ('POST')
@@ -211,7 +211,7 @@ def set_domain():
     um.change_domain(domain)
     db_list = um.get_user_data_list()
     choreographer_list = um.get_choreographers(db_list)
-    return fk.render_template('confirm_info.html', choreographer_list = choreographer_list, data_list = db_list, domain = domain)
+    return fk.render_template('confirm_info.html', choreographer_list = choreographer_list, data_list = db_list, domain = domain[:-1])
 
 
 @app.route("/confirm", methods=['POST'])

@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>HBC Tech Week</title>
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"  type="text/css">
+
+</head>
+
+<body>
+  <!-- logo -->
+  <img  alt="Ballet" style="float: right;" height="200" width="200" 
+        src= "{{ url_for('static', filename='images/ballet.jpg') }}" 
+  />  
+
+
+  <a href="/index"><h1>Automatic Tech Week Scheduler</h1></a>
+  <h3>When do you want the rehearsals to be?</h3>
+  <form action="/stage_time", method="post">
+  <table class="db_table" border="1">
+    <tr>
+      <td>&nbsp;</td>
+      {% for h in hours %}
+      <td>{{h}}pm</td>
+      {% endfor %}
+    </tr>
+    {% for d in days %}
+      <tr>
+        <td>{{d[0]}}, {{d[1]}}</td>
+        {% for h in [12] + (list(range(1,12))) %}
+        <td>
+          <input type="checkbox" name = '{{d[1]}},{{h}}' value="checked"><br>
+        </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+  <input class="bn" type="submit" value="Set Stage Hours and Run Scheduler">
+</form>
+
+
+</body>
+
+</html>

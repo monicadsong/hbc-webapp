@@ -1,44 +1,30 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <title>HBC Tech Week</title>
-  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"  type="text/css">
-
-</head>
-
-<body>
-  <!-- logo -->
-  <img  alt="Ballet" style="float: right;" height="200" width="200" 
-        src= "{{ url_for('static', filename='images/ballet.jpg') }}" 
-  />  
+{% extends "base.html" %}
+{% block title %}Stage Availability{% endblock %}
+{% block content %}
 
 
-  <a href="/index"><h1>Automatic Tech Week Scheduler</h1></a>
-  <h3>When do you want the rehearsals to be?</h3>
+<h3>Stage Availability</h3>
+<p>When should the rehearsals be?</p>
   <form action="/stage_time", method="post">
-  <table class="db_table" border="1">
-    <tr>
-      <td>&nbsp;</td>
-      {% for h in hours %}
-      <td>{{h}}pm</td>
-      {% endfor %}
-    </tr>
-    {% for d in days %}
+   <table class="table table-bordered">
       <tr>
-        <td>{{d[0]}}, {{d[1]}}</td>
+        <td>&nbsp;</td>
         {% for h in hours %}
-        <td>
-          <input type="checkbox" name = '{{d[1]}},{{h}}' value="checked"><br>
-        </td>
+        <td>{{h}}pm</td>
         {% endfor %}
       </tr>
-    {% endfor %}
-  </table>
-  <input class="bn" type="submit" value="Set Stage Hours and Run Scheduler">
+      {% for d in days %}
+        <tr>
+          <td>{{d[0]}}, {{d[1]}}</td>
+          {% for h in hours %}
+          <td>
+            <input type="checkbox" name = '{{d[1]}},{{h}}' value="checked"><br>
+          </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </table>
+  <input class="btn btn-primary" type="submit" value="Set Stage Hours and Run">
 </form>
 
-
-</body>
-
-</html>
+{% endblock %}

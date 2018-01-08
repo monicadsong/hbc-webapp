@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Add Dancers{% endblock %}
+{% block content %}
+    <h4>Current Users</h4> 
+    <div>
+    <table class="table table-sm">
+    <tr>
+      <th scope="col"><fn>Email Address</fn></th>
+      <th scope="col"><fn>First Name</fn></th>
+      <th scope="col"><fn>Last Name</fn></th>
+      <th scope="col"><fn> Nonharvard</fn></th>
+      <th scope="col"><fn> Choreographer </fn></th>
+     </tr>
+      {% for d in data_list %}
+        <tr>
+          <td><fn>{{d.username}} </fn></td>
+          <td><fn>{{d.firstname}} </fn></td>
+          <td><fn>{{d.lastname}} </fn></td>
+          <td><fn>{{d.nonharvard}} </fn></td>
+          <td><fn>{{d.choreographer}} </fn></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <hr>
+  <form action="/add_users", method="post">
+    <h4> Add a user </h4> 
+    <div class="row">
+      <div class="col">
+        <input type="text" class="form-control" name="email" value="" placeholder="Email">
+      </div>
+      <div class="col">
+        <input type="text" class="form-control" name="firstname" value="" placeholder="First Name">
+      </div>
+      <div class="col">
+        <input type="text" class="form-control" name="lastname" value="" placeholder="Last Name">
+      </div>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" name = "nonharvard" type="checkbox" id="inlineCheckbox1" value="">
+      <label class="form-check-label" for="inlineCheckbox1">Is a nonharvard student</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" name = "choreographer" type="checkbox" id="inlineCheckbox2" value="">
+      <label class="form-check-label" for="inlineCheckbox2">Is a choreographer</label>
+    </div>
+    <div class = "row">
+      <input class="btn btn-primary btn-sm" type="submit" name="update" value="Update">
+    </div>
+  </form>
+  <hr>
+  <h4> Delete a user </h4> 
+  <form action="/delete_user", method="post" class="form-inline">
+    <input type="text" class = "form-control" name="username" value="" placeholder="Email">
+    <input class="btn btn-primary btn-sm" type="submit" value="Delete">
+  </form>
+{% endblock %}

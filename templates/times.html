@@ -1,57 +1,29 @@
-<!-- CONVERT TO DAYS ONLY -->
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" /> 
-  <title>Define Times</title>
-  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet"  type="text/css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-</head>
+{% extends "base.html" %}
+{% block title %}Define Dates{% endblock %}
+{% block content %}
 
 
-<body>
-  <!-- logo -->
-  <img  alt="Ballet" style="float: right;" height="200" width="200" 
-        src= "{{ url_for('static', filename='images/ballet.jpg') }}" 
-  />  
+<h3>Dates of Tech Week</h3>
+<p><i>Notes: dancers will be asked to provide their availabilities for these dates from 12p to 11p each day.</i></p>
+<form action="/define_times", method="post">
+  <div class="form-row">
+    <div class="col">
+      <label for="start">Start Date: yyyy-mm-dd</label>
+      <input type="date" name="start_date" id="start">
+    </div>
+    <div class="col">
+      <label for="end">End Date: yyyy-mm-dd</label>
+       <input type="date" name="end_date" id = "end">
+    </div>
+  </div>
+  <div class="form-row">
+  <button type="submit" class="btn btn-primary btn-sm">Define Dates</button>
+  </div>
+</form>
 
-  <!-- make all font bold -->
-  <strong/>
+<hr>
+<h4>Currently defined as: </h4>
+<p>Start Date: {{ current_time.start_date}}</p>
+<p>End Date: {{ current_time.end_date}}</p>
 
-  <!-- add many br -->
-
-  <a href="/index"><h1>Automatic Tech Week Scheduler</h1></a>
-  <h3>Define Times</h3>
-  <form action="/define_times", method="post">
-  Start Date yyyy-mm-dd:<br>
-  <input type="date" name="start_date" id = "test"/>
-  <br>
-  End Date yyyy-mm-dd:<br>
-  <input type="date" name="end_date">
-  <br>
-  Start Time:<br>
-  <input type="number" min="0" step="1" name="start_time" placeholder = '3'> pm
-  <br>
-  End Time:<br>
-  <input type="number" min="0" step="1" name="end_time" placeholder = '10'>pm
-  <br>
-  <input class="bn" type="submit" value="Define Times">
-  </form>
-
-
-  <h3>Currently defined as </h3>
-  <p>Start Time: {{ current_time.start_time}}</p>
-  <p>End Time: {{ current_time.end_time}}</p>
-  <p>Start Date: {{ current_time.start_date}}</p>
-  <p>End Date: {{ current_time.end_date}}</p>
-
-  <script>
-    if ( $('#test')[0].type != 'date' ) $('#test').datepicker();
-  </script>
-</body>
-
-
-
-
-</html>
+{% endblock %}

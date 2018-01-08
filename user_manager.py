@@ -84,10 +84,10 @@ def create_dates(time_data):
       wd = d.weekday()
       days.append((day_week[wd], d))
   return days
-
+'''
 def get_hours(time_data):
   return list(range(time_data.start_time, time_data.end_time + 1))
-
+'''
 def change_domain(time_string):
   s = _session()
   DOMAIN = s.query(_Domain).first()
@@ -256,8 +256,9 @@ def get_user_data_list():
 
   db_list = []
   for u in q:
-    db_list.append(Dummy(u.username, u.firstname, u.lastname, u.nonharvard, u.choreographer, u.dancers, u.availability))
-  return db_list
+    if u.username != 'harvardballetcompany@gmail.com':
+      db_list.append(Dummy(u.username, u.firstname, u.lastname, u.nonharvard, u.choreographer, u.dancers, u.availability))
+  return sorted(db_list, key = lambda x: x.firstname)
 
 
 def get_choreographers(db_list):
@@ -311,7 +312,7 @@ if __name__ == '__main__':
 
 
   def test_del_users():
-    del_user('angela@college')  
+    del_user('ADMIN')  
     print("after deleting user")
     show_users()
 
@@ -325,14 +326,14 @@ if __name__ == '__main__':
     show_users()
 
   def add_admin():
-    admin =  {'email': 'ADMIN', 'firstname': 'password', 'lastname': '', 'nonharvard': False, 'choreographer': False}
+    admin =  {'email': 'harvardballetcompany@gmail.com', 'firstname': 'BALLERina93', 'lastname': '', 'nonharvard': False, 'choreographer': False}
     add_user(admin)
     show_users()
 
   def test_domain():
     print (get_domain())
   #test_update_example()
-  test_domain()
+  #test_domain()
   #test_add_example()
   #add_admin()
   #test_update_users()
@@ -342,3 +343,4 @@ if __name__ == '__main__':
   #show_users()
   #test_add_pieces()
   #get_availability('anna@college')
+  test_del_users()
