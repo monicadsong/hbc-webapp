@@ -3,10 +3,11 @@ from sqlalchemy import create_engine
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
 import example_users
+import helper_db
 
 import sys, os
-import datetime
 
 
 _Base = declarative_base()
@@ -63,26 +64,6 @@ def get_time():
     return TIME
   else: 
     return None
-
-def convert_date(data):
-  date1 = data.split('-')
-  return [int(x) for x in date1]
-
-def create_dates(time_data):
-  d1 = convert_date(time_data.start_date)
-  d2 = convert_date(time_data.end_date)
-  day2 = datetime.date(d2[0],d2[1],d2[2])
-  day1 = datetime.date(d1[0],d1[1],d1[2]) 
-  delta = day2 - day1
-  dd = []
-  for i in range(delta.days + 1):
-      dd.append(day1 + datetime.timedelta(days=i))
-  days = []
-  day_week = {0: "Monday", 1: 'Tuesday', 2:' Wednesday', 3: 'Thursday', 4:'Friday', 5:"Saturday", 6:'Sunday'}
-  for d in dd:
-      wd = d.weekday()
-      days.append((day_week[wd], d))
-  return days
 
 def change_domain(time_string):
   s = _session()
@@ -164,8 +145,6 @@ def add_pieces(pieces):
   s.commit()
   return True
 
-
-
 #make sure usernames are all lowercase
 def user_update(username, availability):
   s = _session()
@@ -221,7 +200,7 @@ def is_valid_user(username):
   else:
     return True
 
-def search_user(username):
+def _search_user(username):
   s = _session()
   try: 
     user = s.query(_Dancer).filter_by(username=username).one()
@@ -229,6 +208,15 @@ def search_user(username):
     return False 
   else:
     return user
+
+def get_castlist(choreographers):
+  castlist = {}
+  for x in choreographers:
+    performers = []
+    for p in x.dancers.split(', '):
+        performers.append(_search_user(p))
+    castlist[(x.firstname, x.lastname)] = performers
+  return castlist
 
 def get_user_data_list():
   class Dummy:
@@ -251,106 +239,3 @@ def get_user_data_list():
   return sorted(db_list, key = lambda x: x.firstname)
 
 
-def get_choreographers(db_list):
-  return [x for x in db_list if x.choreographer]
-
-def get_castlist():
-  choreographers = get_choreographers(get_user_data_list())
-  castlist = {}
-  for x in choreographers:
-    performers = []
-    for p in x.dancers.split(', '):
-        performers.append(search_user(p))
-    castlist[(x.firstname, x.lastname)] = performers
-  return castlist
-
-if __name__ == '__main__':  
-  def test_add_users():
-    '''
-    user_data_Anna =  {'firstname': 'Anna', 'lastname': 'Antongiorgi', 'availability': '00111100',
-                      'nonharvard': False, 'choreographer': True}
-    user_data_Emily =  {'firstname': 'Emily', 'lastname': 'Hogan', 'availability': '11111100','nonharvard': True, 'choreographer': False}
-    user_data_Angela =  {'firstname': 'Angela', 'lastname': 'Ma','availability': '01111000', 'nonharvard': False, 'choreographer': False}
-    '''
-    user_data_Anna =  {'email': 'anna@college', 'firstname': 'Anna', 'lastname': 'Antongiorgi', 'nonharvard': False, 'choreographer': True}
-    user_data_Emily =  {'email': 'emily@college', 'firstname': 'Emily', 'lastname': 'Hogan', 'nonharvard': True, 'choreographer': False}
-    user_data_Angela =  {'email': 'angela@college', 'firstname': 'Angela', 'lastname': 'Ma', 'nonharvard': False, 'choreographer': False}
-    add_user(user_data_Anna)
-    add_user(user_data_Emily)
-    add_user(user_data_Angela)
-    print("added users")
-    show_users()
-
-  def test_add_example():
-    user_data = []
-    for dancer in example_users.users:
-      print ('dancer',dancer)
-      user_dict = {}
-      user_dict['firstname'] = dancer[0]
-      user_dict['lastname'] = dancer[1]
-      user_dict['email'] = dancer[2]
-      user_dict['password'] = dancer[3]
-      user_dict['nonharvard'] = dancer[4]
-      user_dict['choreographer'] = dancer[5]
-      user_dict['availability'] = dancer[6]
-      user_data.append(user_dict)
-
-    for item in user_data:
-      print ('item', item)
-      add_user(item)
-  def test_update_example():
-    for item in example_users.update:
-      user_update(item[0], item[1])
-
-
-  def test_add_pieces():
-    pieces = {'anna@college': 'angela@college, mara@college, deedee@college, isabel@college, sarah@wellesley', 
-    'mara@college': 'emily@college, arlesia@college', 
-    'ali@college': 'anna@college, emily@college, sarah@wellesley, annabel@college'}
-    add_pieces(pieces)
-    print("added pieces")
-    show_pieces()
-
-
-  def test_del_users():
-    del_user('ADMIN')  
-    print("after deleting user")
-    show_users()
-
-  def test_update_users():
-    user_data_Anna =  {'availability': '00111100'}
-    user_data_Emily =  {'availability': '11111100'}
-    user_data_Angela =  {'availability': '01111000'}
-
-    user_update("anna@college", user_data_Anna)
-    print("after update data")
-    show_users()
-
-  def add_admin():
-    admin =  {'email': 'harvardballetcompany@gmail.com', 'firstname': 'BALLERina93', 'lastname': '', 'nonharvard': False, 'choreographer': False}
-    add_user(admin)
-    show_users()
-
-  def test_avail():
-    user_avails = [(x.firstname, x.lastname, get_availability(x.username)) for x in get_user_data_list()]
-    print (user_avails)
-
-  def test_domain():
-    print (get_domain())
-  def test_castlist():
-    print (get_castlist())
-
-  #test_avail()
-  #test_update_example()
-  #test_domain()
-  #test_add_example()
-  #add_admin()
-  #test_update_users()
-  #clear_table()
-  #test_add_users()
-  #user_update('anna@college', '2017-10-16,4;2017-10-16,5;2017-10-16,6;2017-10-16,7;2017-10-16,8;2017-10-16,9;2017-10-16,10;2017-10-16,11;2017-10-17,11;2017-10-18,11;2017-10-19,11;2017-10-20,11;')
-  show_users()
-  #test_add_pieces()
-  #get_availability('anna@college')
-  #test_del_users()
-  #test_castlist()

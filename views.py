@@ -1,11 +1,12 @@
 import os, sys
-#from sets import Set
 import flask as fk
 from functools import wraps
 
 from g import app
 
-import user_manager as um
+import db_manager as dm
+import helper_db
+
 from solver import solve
 
 def login_required(f):
@@ -15,7 +16,7 @@ def login_required(f):
   @wraps(f)
   def wrapper(*args, **kwargs):
     name = fk.request.cookies.get('user_id')
-    if not um.is_valid_user(name): 
+    if not dm.is_valid_user(name): 
       return "You need to login first", 401 
     else:
       return f(*args, **kwargs)
@@ -28,7 +29,7 @@ def user_login():
   if fk.request.method == 'POST':
     user_name = fk.request.form['username']
     password = fk.request.form['password']
-    if um.login(user_name, password):
+    if dm.login(user_name, password):
       resp = fk.make_response(fk.redirect("/index"))
       resp.set_cookie('user_id', fk.request.form['username'])
       return resp 
@@ -70,11 +71,11 @@ def index():
       availability = ''
       for item in fk.request.form:
         availability = availability + item + ';'
-      um.user_update(user_id, availability)
-    time_data = um.get_time()
-    days = um.create_dates(time_data)
+      dm.user_update(user_id, availability)
+    time_data = dm.get_time()
+    days = helper_db.create_dates(time_data)
     hours = [12,1,2,3,4,5,6,7,8,9,10,11]
-    avail = um.get_availability(user_id)
+    avail = dm.get_availability(user_id)
     return fk.render_template('index.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
 
@@ -95,13 +96,13 @@ def manage_database():
       user_data["choreographer"]  = fk.request.form["choreographer"]
 
       print("user_data: ", user_id, user_data)
-      um.user_update(user_id, user_data)
-      db_list = um.get_user_data_list()
+      dm.user_update(user_id, user_data)
+      db_list = dm.get_user_data_list()
       return fk.render_template('database_manager.html', data_list=db_list, user_name=user_id)
     else:
       raise("This button has not been handled yet")
   elif fk.request.method == 'GET':
-    db_list = um.get_user_data_list()
+    db_list = dm.get_user_data_list()
     return fk.render_template('database_manager.html', data_list=db_list, user_name=user_id)
 
 
@@ -127,12 +128,12 @@ def add_users():
       else: 
         user_data['choreographer'] = False
 
-      um.add_user(user_data)
-      db_list = um.get_user_data_list()
+      dm.add_user(user_data)
+      db_list = dm.get_user_data_list()
       return fk.render_template('add_user.html', data_list = db_list, user_name=user_id)
   elif fk.request.method == 'GET':
     print ('fk get')
-    db_list = um.get_user_data_list()
+    db_list = dm.get_user_data_list()
     return fk.render_template('add_user.html', data_list = db_list, user_name=user_id)
 
 
@@ -142,8 +143,8 @@ def add_users():
 def delete_user():
   user_id = fk.request.cookies.get('user_id')
   user = fk.request.form['username']
-  um.del_user(user)
-  db_list = um.get_user_data_list()
+  dm.del_user(user)
+  db_list = dm.get_user_data_list()
   return fk.render_template('add_user.html', data_list = db_list, user_name=user_id)
 
 @app.route("/add_pieces", methods=['GET', 'POST'])
@@ -163,10 +164,11 @@ def add_pieces():
         pieces[choreographer] = dancer
     
     print ('pieces', pieces)
-    um.add_pieces(pieces)
-  db_list = um.get_user_data_list()
-  return fk.render_template('add_pieces.html', cast_list = um.get_castlist(), 
-    choreographer_list = um.get_choreographers(db_list), dancer_list = db_list, user_name=user_id)
+    dm.add_pieces(pieces)
+  db_list = dm.get_user_data_list()
+  choreographer_list = helper_db.get_choreographers(db_list)
+  return fk.render_template('add_pieces.html', cast_list = dm.get_castlist(choreographer_list), 
+    choreographer_list = choreographer_list, dancer_list = db_list, user_name=user_id)
 
 
 @app.route("/define_times", methods=['GET', 'POST'])
@@ -180,9 +182,9 @@ def define_times():
     time_data['start_time'] = 12
     time_data['end_time'] = 11
     print (time_data, 'time data views')
-    um.change_time(time_data)
+    dm.change_time(time_data)
 
-  return fk.render_template('times.html', current_time = um.get_time(), user_name=user_id)
+  return fk.render_template('times.html', current_time = dm.get_time(), user_name=user_id)
 
 @app.route("/add_availability", methods=['POST'])
 #@login_required
@@ -193,11 +195,11 @@ def add_availability():
     availability = ''
     for item in fk.request.form:
       availability = availability + item + ';'
-    um.user_update(user_id, availability)
-  time_data = um.get_time()
-  days = um.create_dates(time_data)
+    dm.user_update(user_id, availability)
+  time_data = dm.get_time()
+  days = helper_db.create_dates(time_data)
   hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-  avail = um.get_availability(user_id)
+  avail = dm.get_availability(user_id)
   return fk.render_template('index.html', days = days, hours = hours, avail = avail, user_name = user_id)
 
 @app.route("/stage_time", methods=['GET', 'POST'])
@@ -217,19 +219,19 @@ def set_domain():
 
   if fk.request.method == 'GET':
     print ('GET')
-    time_data = um.get_time()
-    days = um.create_dates(time_data)
+    time_data = dm.get_time()
+    days = dm.create_dates(time_data)
     hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    return fk.render_template('stage_time.html', days = days, hours = hours)
+    return fk.render_template('stage_time.html', days = days, hours = hours, user_name = user_id)
   else:
     domain = ''
     for item in fk.request.form:
       domain = domain + item + ';'
     print (domain, 'domain')
-    um.change_domain(domain)
-    user_avails = [(x.firstname, x.lastname, um.get_availability(x.username)) for x in um.get_user_data_list()]
-    return fk.render_template('confirm_info.html', cast_list = um.get_castlist(), 
-      data_list = user_avails, domain = parse_domain(um.get_domain()), user_name = user_id)
+    dm.change_domain(domain)
+    user_avails = [(x.firstname, x.lastname, dm.get_availability(x.username)) for x in dm.get_user_data_list()]
+    return fk.render_template('confirm_info.html', cast_list = dm.get_castlist(helper_db.get_choreographers(get_user_data_list())), 
+      data_list = user_avails, domain = parse_domain(dm.get_domain()), user_name = user_id)
 
 
 @app.route("/confirm", methods=['POST'])

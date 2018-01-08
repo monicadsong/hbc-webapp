@@ -1,29 +1,29 @@
 from scheduler import *
-import user_manager as um
+import db_manager as dm
 import helper
 from classes import *
 
 ### get Dancer objects
 def get_dancers():
-    dancers = [Dancer(d.firstname+d.lastname, d.availability.split(';'), d.nonharvard, d.choreographer) for d in um.get_user_data_list()]
+    dancers = [Dancer(d.firstname+d.lastname, d.availability.split(';'), d.nonharvard, d.choreographer) for d in dm.get_user_data_list()]
     return dancers
 
 ### get Rehearsal objects
 def get_pieces(dancers, domain):
     choreographers = [(Dancer(d.firstname+d.lastname, d.availability.split(';'), d.nonharvard, d.choreographer), 
-        d.dancers) for d in um.get_user_data_list() if d.choreographer]
+        d.dancers) for d in dm.get_user_data_list() if d.choreographer]
     domain = domain.split(';')
     pieces = []
     for c in choreographers:
         performers = []
         for p in c[1].split(', '):
-            performers.append(um.search_user(p))
+            performers.append(dm.search_user(p))
         pieces.append(Rehearsal(c[0], performers, domain))
     return pieces
 
 def solve():
     dancers = get_dancers()
-    domain = um.get_domain()
+    domain = dm.get_domain()
     pieces = get_pieces(dancers, domain)
     problem = Scheduler(dancers, pieces, domain)
     problem.set_initial(pieces, dancers)
@@ -75,8 +75,8 @@ if __name__ == '__main__':
             print (item.name)
 
     def test_get_pieces():
-        domain = um.get_domain()
-        dancers = um.get_user_data_list()
+        domain = dm.get_domain()
+        dancers = dm.get_user_data_list()
         pieces = get_pieces(dancers, domain)
         for item in pieces:
             print (item.choreographer)
