@@ -220,7 +220,7 @@ def set_domain():
   if fk.request.method == 'GET':
     print ('GET')
     time_data = dm.get_time()
-    days = dm.create_dates(time_data)
+    days = helper_db.create_dates(time_data)
     hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     return fk.render_template('stage_time.html', days = days, hours = hours, user_name = user_id)
   else:
