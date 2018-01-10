@@ -14,4 +14,4 @@
 * *solver.py*: runs the scheduler
 
 
-Web App is available at: [34.207.173.18:5001]
+Web App is available at: [http://34.207.173.18:5001]
