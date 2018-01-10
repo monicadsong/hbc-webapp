@@ -12,10 +12,6 @@
 
 #### Description of the files:
 * *solver.py*: runs the scheduler
-* *scheduler.py*: contains the code for the scheduler class and the three algorithms
-* *eval_solution.py*: evaluates a pre-existing actual tech week
-* *classes.py*: contains the Dancer and Rehearsal classes
-* *helper.py*: contains helper functions referenced by the Scheduler class
-* *timeslot_vars.py*: contains the variable values for the time slots
-* *Tree.py*: contains helper code for building the search tree
-* *InPassage.py, CityScapes.py, Oz.py*: contain the dancer and piece objects for each performance
+
+
+Web App is available at: [34.207.173.18:5001]
