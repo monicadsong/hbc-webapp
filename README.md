@@ -1,8 +1,9 @@
 # HBC Tech Week Scheduler
-Web application to allow HBC producers to easily create tech week schedules. Built using Flask, SQLALchemy, Jinja, Bootstrap and Python3. 
+Web application to allow HBC producers to easily create tech week schedules. Built using Flask and Bootstrap.  
 
 ## Flask Web App
 Application runs on an Amazon EC2 instance and is accessible at http://34.207.173.18:5001
+
 Algorithm development available at https://github.com/monicadsong/CS182-Final-Project
 
 
@@ -23,11 +24,12 @@ Algorithm development available at https://github.com/monicadsong/CS182-Final-Pr
 * *views.py*: view functions to connect database with HTML templates
 * *db_manager_tests.py*: test the database manager
 * *example_user.py*: example cases
-* *templates*: contains the HTML templates
+* *templates*: contains the HTML/Jinja templates
 * *static*: contains custom and Bootstrap CSS and Javascript files as well as images
 
 ### To Do:
-* Add error messages/ alerts
+* Add message alerts
 * Allow admin to send emails to dancers
 * Allow admin to save scheduler output
+* Create error pages
 * **Connect to domain name**
