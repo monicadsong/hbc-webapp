@@ -9,3 +9,5 @@ import os
 # flask application object
 app = Flask(__name__)
 app.config.from_object('config')
+
+#print (__name__)

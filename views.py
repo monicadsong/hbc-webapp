@@ -17,7 +17,7 @@ def login_required(f):
   def wrapper(*args, **kwargs):
     name = fk.request.cookies.get('user_id')
     if not dm.is_valid_user(name): 
-      return "You need to login first", 401 
+      return fk.render_template('403.html'), 403
     else:
       return f(*args, **kwargs)
 
@@ -34,7 +34,7 @@ def user_login():
       resp.set_cookie('user_id', fk.request.form['username'])
       return resp 
     else:
-      return "Ether username or password is not correct, please try again", 406
+      return fk.render_template('401.html'), 401
   else:
     return fk.render_template('login.html')
 
@@ -50,7 +50,7 @@ def logout():
 def admin():
   user_id = fk.request.cookies.get('user_id')
   if user_id != 'harvardballetcompany@gmail.com': 
-    return "Sorry, you don't have access this page.", 403
+    return fk.render_template('403.html'), 403
   else:
     return fk.render_template('admin.html', user_name = user_id)
 
